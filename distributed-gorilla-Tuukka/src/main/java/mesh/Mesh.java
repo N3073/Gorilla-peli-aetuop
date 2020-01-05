@@ -29,7 +29,8 @@ public class Mesh extends Thread{
      */
 	private Set<Handler> names = new HashSet<>();
 	private final int port;
-	private  Set<Long> tokens = new HashSet<>();
+	private  Set<Long> tokens1 = new HashSet<>();
+	private  Set<Long> tokens2 = new HashSet<>();
 	ExecutorService pool = Executors.newFixedThreadPool(500);
 	private GorillaLogic logic;
     public Mesh(int port, GorillaLogic logic) {
@@ -97,11 +98,40 @@ public class Mesh extends Thread{
      * Tarkista, onko viestitunniste jo olemassa
      * Määreenä private, koska tätä käyttävä luokka on sisäluokka (inner class)
      * Jos et käytä sisäluokkaa, pitää olla public
+     * Käytetään kahta hashsettiä, jotta voidaan kontrolloida tallennettujen tokenien määrää.
      * @param token Viestitunniste 
      */
     private synchronized boolean tokenExists(Long token) {
-        return !tokens.add(token); // HashSet.add() palauttaa false jos token on jo kyseisessä kokoelmassa.  
-	}  // nyt palautetaan true, jos token on jo nähty ennen.
+    	int vuoro = 1;
+    	int sallittuKoko = 40;
+    	/*
+    	 * jos token on jo olemassa sitä ei tarvitse lisätä ja palautetaan true
+    	 * 
+    	 * */
+    	if(tokens1.contains(token) | tokens2.contains(token)) {
+    		return true;
+    	}
+    	/*
+    	 * Vältetään työmuistin täyttyminen poistamalla vanhoja tokeneita.
+    	 * Jos tokens1 tai tokens2 settien koot ylittävät sallitun koon
+    	 * poistetaan vanhempi puolisko poistetaan ja sitä aletaan täyttää uudestaan
+    	 * 
+    	 * */
+    	if(vuoro == 1) {
+    		tokens1.add(token);
+    		if(tokens1.size()>sallittuKoko/2) {
+    			vuoro = 2;
+    			tokens2.clear();
+    		}
+    	}else if(vuoro == 2) {
+    		tokens2.add(token);
+    		if(tokens2.size()>sallittuKoko/2) {
+    			vuoro = 1;
+    			tokens1.clear();
+    		}
+    	}
+    	return false;
+	}
 
     /**
      * Yhdistä tämä vertainen olemassaolevaan Mesh-verkkoon
