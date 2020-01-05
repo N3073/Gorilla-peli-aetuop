@@ -99,7 +99,7 @@ public class Mesh extends Thread{
      * Jos et käytä sisäluokkaa, pitää olla public
      * @param token Viestitunniste 
      */
-    private boolean tokenExists(Long token) {
+    private synchronized boolean tokenExists(Long token) {
         return !tokens.add(token); // HashSet.add() palauttaa false jos token on jo kyseisessä kokoelmassa.  
 	}  // nyt palautetaan true, jos token on jo nähty ennen.
 

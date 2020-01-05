@@ -107,12 +107,12 @@ public class GorillaLogic implements GraphicalAppLogic {
             case Menu:
                 if (k == Key.Up) {
                     if (selectedMenuItem > 0) selectedMenuItem--;
-                    else selectedMenuItem = 3;
+                    else selectedMenuItem = 2;
                     views.setSelectedMenuItem(selectedMenuItem);
                     return;
                 }
                 if (k == Key.Down) {
-                    if (selectedMenuItem < 3) selectedMenuItem++;
+                    if (selectedMenuItem < 2) selectedMenuItem++;
                     else selectedMenuItem = 0;
                     views.setSelectedMenuItem(selectedMenuItem);
                     return;
@@ -133,12 +133,6 @@ public class GorillaLogic implements GraphicalAppLogic {
                             handleMultiplayer();
                             break;
                         case 2:
-                        	if (console != null && console.inputQueue().peek() != null) {
-                                parseCommandLine(console.inputQueue().poll());
-                            }
-                        	connectToServer(String address, "1234")
-                        	break;
-                        case 3:
                             Platform.exit();
                     }
                 }
@@ -157,15 +151,6 @@ public class GorillaLogic implements GraphicalAppLogic {
         if (console != null && console.inputQueue().peek() != null) {
             parseCommandLine(console.inputQueue().poll());
         }
-    }
-    //käytetään kun halutaan käyttäjän syötteestä yhdistää uuteen koneseen
-    private String getAddressFromInput() {
-    	if (cmd.contains(" ")) {
-            String rest = cmd.substring(cmd.split(" ")[0].length() + 1);
-            switch (cmd.split(" ")[0]) {
-        }
-            }
-    	return address;
     }
     
     /**
@@ -205,7 +190,6 @@ public class GorillaLogic implements GraphicalAppLogic {
         views.setMenu("Gorillasota 2029", new String[]{
                 "Aloita / lopeta peli",
                 "Aloita Moninpeli",
-                "Yhdistä palvelimeen",
                 "Lopeta"
         });
 
@@ -437,9 +421,11 @@ public class GorillaLogic implements GraphicalAppLogic {
                     break;
                 case "ip":
                 case "IP":
-                	System.out.println("Anna ip-osoite, johon haluat yhdistää.");
                 	try {
-                		
+                		connectToServer(rest, "1234");
+                		System.out.println("Yhdistetty koneeseen " + rest);
+                	}catch(Exception e) {
+                		System.out.println("Koneeseen osoitteessa " + rest + " ei voitu yhdistää");
                 	}
                 	break;
                 case "v":
