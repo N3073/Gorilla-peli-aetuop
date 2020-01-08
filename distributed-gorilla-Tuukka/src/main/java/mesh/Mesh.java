@@ -223,12 +223,14 @@ public class Mesh extends Thread{
             				Ping ping = ((Ping)p);
             				if(ping.senderId == id && ping.echo==true) {
             					contacts=((Ping)p).contacts;
+            					System.out.println(contacts.size());
             				} else if(names.size()==1) {
             					ping.contacts.add(id);
             					broadcast(new Ping(ping));
             					
             				} else if(ping.echo==true) {
             					ping.contacts.add(id);
+            					System.out.println(contacts.size());
             				}
             			}
         				

@@ -8,6 +8,7 @@ public class Ping extends ViestiLuokka{
 	public final String senderId;
 	public Ping(String senderId) {
 		super();
+		this.contacts= new ArrayList<String>();
 		this.senderId = senderId;
 		echo = false;
 	}
