@@ -77,6 +77,7 @@ public class Mesh extends Thread{
      * Sulje mesh-palvelin ja kaikki sen yhteydet 
      */
     public void close() {
+    	broadcast(new ResignationLetter());
     	for (Handler saie : names) {
     		try {
     			saie.interrupt();
@@ -149,7 +150,7 @@ public class Mesh extends Thread{
     	try {
                 Socket socket = new Socket(addr, port);
     			
-    			pool.execute(new Handler(socket));
+    			pool.execute(new Handler(socket,true));
     			
         
     		
@@ -165,7 +166,7 @@ public class Mesh extends Thread{
         try (var listener = new ServerSocket(port)) {
             System.out.println("Listening to port " + port + " at " + listener.getInetAddress());
             while (true) {
-                pool.execute(new Handler(listener.accept()));
+                pool.execute(new Handler(listener.accept(),false));
             }
         } catch (Exception e) {
         	e.printStackTrace();
@@ -178,13 +179,14 @@ public class Mesh extends Thread{
     private class Handler extends Thread {
         private String name = new Random().nextInt() + "" + new Random().nextInt();
         private final Socket socket;
+        private final boolean og;
 
         private ObjectOutputStream oOut;
         private ObjectInputStream oIn;
 
-        public Handler(final Socket socket) throws Exception {
+        public Handler(final Socket socket, boolean og) throws Exception {
           	this.socket = socket;
-
+          	this.og = og;
         }
         
         //
@@ -198,22 +200,41 @@ public class Mesh extends Thread{
         public void run() {
         	names.add(this);
         	try {InputStream iS = socket.getInputStream();
-                    OutputStream oS = socket.getOutputStream();
-        			this.oOut = new ObjectOutputStream(oS);
-        			this.oIn= new ObjectInputStream(iS);
-        			
+                OutputStream oS = socket.getOutputStream();
+        		this.oOut = new ObjectOutputStream(oS);
+        		this.oIn= new ObjectInputStream(iS);
+        		if(og) {
+        			HandShake firstContact = new HandShake();
+        			oOut.writeObject(firstContact);
+        			oOut.flush();
+					Thread.sleep(10);
+        			ViestiLuokka rebound = (ViestiLuokka) oIn.readObject();
+        			if(rebound instanceof HandShake) {
+        				
+        				if(((HandShake)rebound).getValidation() != 000000000000) {
+        					names.remove(this);
+        					socket.close();
+            				interrupt();
+        				}
+        			}else {
+        				names.remove(this);
+        				socket.close();
+        				interrupt();
+        			}
+        		}
         		// tarkastetaan onko viesti uusi ja merkitään muistiin
         		while(true) {
         			
         			ViestiLuokka p = (ViestiLuokka) oIn.readObject();
         			if(!tokenExists(p.getToken())) {
-
         				if(p instanceof ChatMessage) {
-
         					ChatMessage message = (ChatMessage) p;
-
         					System.out.println(message.sender +": " + message.contents + p.getToken());
         					broadcast(p);
+        					
+        					
+        					
+        					
         				}else if(p instanceof PlayerUpdate) {
         					logic.updateGameState((PlayerUpdate) p);
         					broadcast(p);
@@ -222,6 +243,32 @@ public class Mesh extends Thread{
         					logic.loadGameState((GameState) p);
         					logic.setMode(GameMode.Game);
         					logic.views.setGameState((GameState)p);
+        					
+        					
+        					
+        					
+        					
+        					
+        					
+        					
+        				}else if(p instanceof HandShake){
+        					HandShake rebound = (HandShake)p;
+        					rebound.setValidation();
+        					oOut.writeObject(rebound);
+                			oOut.flush();
+        					
+        					
+        				}else if(p instanceof ResignationLetter) {
+        					names.remove(this);
+        					socket.close();
+            				interrupt();
+        					
+        					
+        					
+        					
+        					
+        					
+        					
         					
         				}else if(p instanceof Ping){
         					System.out.println("vastaaan otettu ping");
@@ -245,8 +292,7 @@ public class Mesh extends Thread{
         				}
         				
         			
-        			}	
-        		
+        			}
 
         		} catch (Exception e) {
         			e.printStackTrace();
