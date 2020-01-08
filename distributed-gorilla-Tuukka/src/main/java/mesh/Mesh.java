@@ -33,7 +33,7 @@ public class Mesh extends Thread{
 	private final int port;
 	private  Set<Long> tokens1 = new HashSet<>();
 	private  Set<Long> tokens2 = new HashSet<>();
-	public ArrayList<String> contacts;
+	public ArrayList<String> contacts = new ArrayList<String>();
 	ExecutorService pool = Executors.newFixedThreadPool(500);
 	private GorillaLogic logic;
     public Mesh(int port, GorillaLogic logic) {

@@ -118,7 +118,7 @@ public class GorillaLogic implements GraphicalAppLogic {
                     views.setSelectedMenuItem(selectedMenuItem);
                     return;
                 }
-                if (k == Key.Enter) {
+                if (k == Key.Right) {
                     switch (selectedMenuItem) {
                         case 0:
                             // quit active game
@@ -131,8 +131,15 @@ public class GorillaLogic implements GraphicalAppLogic {
                             }
                             break;
                         case 1:
-                        	initMPGame();
-                            handleMultiplayer();
+                        	
+                        	if (gameState != null) {
+                                resetGame();
+                                setMode(GameMode.Menu);
+                            } else {
+                                setMode(GameMode.Game);
+                                System.out.println("tänne");
+                               initMPGame();
+                            }
                             break;
                         case 2:
                             Platform.exit();
@@ -279,6 +286,7 @@ public class GorillaLogic implements GraphicalAppLogic {
         InetAddress addr = InetAddress.getByName(address);
         
         verkko.connect(addr ,Integer.parseInt(port));
+        updateMenuInfo();
         //verkko2.connect(addr ,Integer.parseInt(port));
         //verkko2.broadcast(new ChatMessage(myName,"tervehdys verkko 2"));
         }catch(Exception e) {
@@ -309,22 +317,24 @@ public class GorillaLogic implements GraphicalAppLogic {
     }
     
     /**
-     * Starts a new multiplayer game with max number of AI players
+     * Starts a new multiplayer game
      */
     private void initMPGame() {
+    	otherPlayers.clear();
+    	System.out.println(otherPlayers.size());
         double h = getCanvas().getHeight();
         ArrayList<String> contacts = getPlayers();
+        
         // Create maxPlayers-1 AI players
-        for (int i=0; i<contacts.size(); i++) {
+        for (int i=0; i<contacts.size(); i++) {;
             joinGame(contacts.get(i));
         }
         
         List<String> names = new LinkedList<>();
         names.add(myName);
-        for (Player player : otherPlayers) names.add(player.name);
-
+        for (Player player : otherPlayers)  names.add(player.name);
         GameConfiguration configuration = new GameConfiguration(gameSeed, h, names);
-
+    	System.out.println(otherPlayers.size());
         gameState = new GameState(configuration, myName, new LinkedBlockingQueue<>(), otherPlayers);
         verkko.broadcast(gameState);
         views.setGameState(gameState);
@@ -362,7 +372,7 @@ public class GorillaLogic implements GraphicalAppLogic {
      * Handles starting a multiplayer game. This event is usually fired by selecting
      * Palvelinyhteys in game menu
      */
-    protected void handleMultiplayer() {
+    /*protected void handleMultiplayer() {
     	// quit active game
         if (gameState != null) {
             resetGame();
@@ -370,7 +380,7 @@ public class GorillaLogic implements GraphicalAppLogic {
         } else {
             setMode(GameMode.Game);
         }
-    }
+    }*/
 
     /**
      * Handles banana throwing. This event is usually fired by angle and velocity commands
