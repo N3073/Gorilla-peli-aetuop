@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 //import java.util.Scanner;
@@ -27,19 +28,25 @@ public class Mesh extends Thread{
      * Luo Mesh-palvelininstanssi
      * @param port Portti, jossa uusien vertaisten liittymispyyntöjä kuunnellaan
      */
+	private final String id;
 	private Set<Handler> names = new HashSet<>();
 	private final int port;
 	private  Set<Long> tokens1 = new HashSet<>();
 	private  Set<Long> tokens2 = new HashSet<>();
+	public ArrayList<String> contacts;
 	ExecutorService pool = Executors.newFixedThreadPool(500);
 	private GorillaLogic logic;
     public Mesh(int port, GorillaLogic logic) {
+    	this.id = new Random().nextInt()+"";
     	this.logic = logic;
     	this.port = port;
     	 
 	}
     public int size() {
     	return names.size();
+    }
+    public String getID() {
+    	return this.id;
     }
    
     /**
@@ -66,7 +73,6 @@ public class Mesh extends Thread{
      */
     public void send(Serializable o, String recipient) {
 	}
-
     /**
      * Sulje mesh-palvelin ja kaikki sen yhteydet 
      */
@@ -198,6 +204,7 @@ public class Mesh extends Thread{
         			
         		// tarkastetaan onko viesti uusi ja merkitään muistiin
         		while(true) {
+        			
         			ViestiLuokka p = (ViestiLuokka) oIn.readObject();
         			if(!tokenExists(p.getToken())) {
 
@@ -212,11 +219,24 @@ public class Mesh extends Thread{
         					logic.loadGameState((GameState) p);
         					logic.setMode(GameMode.Game);
         					logic.views.setGameState((GameState)p);
-        				}
+        				}else if(p instanceof Ping){
+            				Ping ping = ((Ping)p);
+            				if(ping.senderId == id && ping.echo==true) {
+            					contacts=((Ping)p).contacts;
+            				} else if(names.size()==1) {
+            					ping.contacts.add(id);
+            					broadcast(new Ping(ping));
+            					
+            				} else if(ping.echo==true) {
+            					ping.contacts.add(id);
+            				}
+            			}
         				
         				broadcast(p);
         			
         				}
+        				
+        			
         			}	
         		
 

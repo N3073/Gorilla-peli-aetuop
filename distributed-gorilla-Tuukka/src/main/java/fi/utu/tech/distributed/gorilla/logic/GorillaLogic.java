@@ -10,6 +10,7 @@ import fi.utu.tech.oomkit.windows.Window;
 import javafx.application.Application;
 import javafx.application.Platform;
 import mesh.Mesh;
+import mesh.Ping;
 import mesh.PlayerUpdate;
 import mesh.ViestiLuokka;
 import java.net.InetAddress;
@@ -130,6 +131,7 @@ public class GorillaLogic implements GraphicalAppLogic {
                             }
                             break;
                         case 1:
+                        	initMPGame();
                             handleMultiplayer();
                             break;
                         case 2:
@@ -219,9 +221,9 @@ public class GorillaLogic implements GraphicalAppLogic {
      * @param name The name of the ai player to be created
      */
     public void joinGame(String name) {
-        if (otherPlayers.size() + 1 < maxPlayers) {
+//        if (otherPlayers.size() + 1 < maxPlayers) {
             otherPlayers.add(new Player(name, new LinkedBlockingQueue<>(), false));
-        }
+//        }
     }
 
     /**
@@ -309,27 +311,32 @@ public class GorillaLogic implements GraphicalAppLogic {
     /**
      * Starts a new multiplayer game with max number of AI players
      */
- /*   private void initMPGame() {
+    private void initMPGame() {
         double h = getCanvas().getHeight();
-
-        // Create maxPlayers-1 AI playersf
-        for (int i=0; i<maxPlayers; i++) {
-            joinGame("Kingkong " + i);
+        ArrayList<String> contacts = getPlayers();
+        // Create maxPlayers-1 AI players
+        for (int i=0; i<contacts.size(); i++) {
+            joinGame(contacts.get(i));
         }
+        
+        List<String> names = new LinkedList<>();
+        names.add(myName);
+        for (Player player : otherPlayers) names.add(player.name);
 
-        //List<String> names = new LinkedList<>();
-        Map<Long, String> playerIdNames;
+        GameConfiguration configuration = new GameConfiguration(gameSeed, h, names);
 
-        for (Player player : playerIdNames) {
-        	
-}
-
-        GameConfiguration configuration = new GameConfiguration(gameSeed, h,playerIdNames);
-
-        gameState = new GameState(configuration, List<Player> players, myName);
+        gameState = new GameState(configuration, myName, new LinkedBlockingQueue<>(), otherPlayers);
         verkko.broadcast(gameState);
         views.setGameState(gameState);
-    }*/
+    }
+    private ArrayList<String> getPlayers() {
+    	verkko.broadcast(new Ping(verkko.getID()));
+    	try{Thread.currentThread().sleep(1000);
+    	}catch(Exception e) {
+    		System.out.println("Nukkuminen ei onnistunut: getPlayers");
+    	}
+    	return verkko.contacts;
+    }
 
     /**
      * Add move to players move queue by using player name
