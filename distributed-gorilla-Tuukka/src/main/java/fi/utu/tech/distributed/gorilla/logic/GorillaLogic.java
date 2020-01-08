@@ -12,17 +12,15 @@ import javafx.application.Platform;
 import mesh.Mesh;
 import mesh.Ping;
 import mesh.PlayerUpdate;
-import mesh.ViestiLuokka;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * TODO: Extend this for GorillaMultiplayerLogic and make Overrides there
+ * 
  * Alternatively this class can be also modified
  */
 public class GorillaLogic implements GraphicalAppLogic {
@@ -149,6 +147,8 @@ public class GorillaLogic implements GraphicalAppLogic {
             case Game:
                 // instead we read with 'handleConsoleInput'
                 break;
+		default:
+			break;
         }
     }
 
@@ -339,7 +339,7 @@ public class GorillaLogic implements GraphicalAppLogic {
     }
     private ArrayList<String> getPlayers() {
     	verkko.broadcast(new Ping(verkko.getID()));
-    	try{Thread.currentThread().sleep(1000);
+    	try{Thread.sleep(1000);
     	}catch(Exception e) {
     		System.out.println("Nukkuminen ei onnistunut: getPlayers");
     	}
@@ -400,6 +400,7 @@ public class GorillaLogic implements GraphicalAppLogic {
     /**
      * Parses the game command prompt and fires appropriate handlers
      * @param cmd Unparsed command to be parsed
+     * 
      */
     private void parseCommandLine(String cmd) {
         if (cmd.contains(" ")) {
@@ -421,14 +422,15 @@ public class GorillaLogic implements GraphicalAppLogic {
                     handleChatMessage(new ChatMessage(myName, rest));
                     updateMenuInfo();
                     break;
-                case "g":
+                /*case "g":
                 	System.out.println("g painettu");
                 	ArrayList<String> pelaajat= getPlayers();
                 	for(int i = 0; i<pelaajat.size();i++) {
                 		System.out.println(pelaajat.get(i));
                 	}System.out.println("pingi lähetettty");
+                	Thread.sleep(20);
                 	updateMenuInfo();
-                	break;
+                	break;*/
                 case "a":
                 case "k":
                 case "angle":
@@ -522,6 +524,8 @@ public class GorillaLogic implements GraphicalAppLogic {
                 // Advance the game state, the actual game
                 gameState.tick();
                 break;
+		default:
+			break;
         }
     }
 }
