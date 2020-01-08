@@ -171,7 +171,7 @@ public class GorillaLogic implements GraphicalAppLogic {
         startServer(parameters.getNamed().getOrDefault("port", "1234"));
 
         // Connect to address given as a command line parameter "server" (default: localhost) on port given (default: 1234)
-        connectToServer(parameters.getNamed().getOrDefault("server", "whatever"), parameters.getNamed().getOrDefault("port", "1234"));
+        //connectToServer(parameters.getNamed().getOrDefault("server", "whatever"), parameters.getNamed().getOrDefault("port", "1234"));
 
     	/*
     	 * Alustetaan ja käynnistetään Mesh-verkko
