@@ -1,6 +1,6 @@
 package mesh;
 
-import java.io.IOException;
+
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -229,7 +229,7 @@ public class Mesh extends Thread{
         			if(!tokenExists(p.getToken())) {
         				if(p instanceof ChatMessage) {
         					ChatMessage message = (ChatMessage) p;
-        					System.out.println(message.sender +": " + message.contents + p.getToken());
+        					System.out.println(message.sender +": " + message.contents);
         					broadcast(p);
         					
         					
