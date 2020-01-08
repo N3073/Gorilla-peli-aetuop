@@ -7,6 +7,7 @@ import fi.utu.tech.oomkit.app.Scheduled;
 import fi.utu.tech.oomkit.canvas.Point2D;
 import mesh.ViestiLuokka;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,7 +18,7 @@ import java.util.function.Consumer;
  * TODO: You may want to compare the constructors
  * The other may be more suitable for multiplayer
  */
-public class GameState extends ViestiLuokka implements Scheduled {
+public class GameState extends ViestiLuokka implements Scheduled,Serializable {
     public final GameConfiguration configuration;
     private final List<Player> players = new ArrayList<>();
     private final Player me;

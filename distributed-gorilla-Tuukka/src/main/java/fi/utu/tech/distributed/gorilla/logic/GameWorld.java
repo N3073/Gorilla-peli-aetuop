@@ -8,6 +8,7 @@ import fi.utu.tech.distributed.gorilla.views.BuildingView;
 import fi.utu.tech.oomkit.app.Scheduled;
 import fi.utu.tech.oomkit.canvas.Point2D;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.Random;
  * the initial state can be fully reconstructed from 'configuration' and 'players'.
  * </p>
  */
-public class GameWorld implements Scheduled {
+public class GameWorld implements Scheduled,Serializable {
     private final GameConfiguration configuration;
     private final ArrayList<Cloud> clouds = new ArrayList<>();
     private final List<Banana> bananas = new ArrayList<>();

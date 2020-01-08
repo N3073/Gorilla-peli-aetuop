@@ -1,5 +1,7 @@
 package fi.utu.tech.distributed.gorilla.objects;
 
+import java.io.Serializable;
+
 import fi.utu.tech.distributed.gorilla.engine.Engine;
 import fi.utu.tech.distributed.gorilla.engine.ProxyGameObject;
 import fi.utu.tech.distributed.gorilla.views.BuildingView;
@@ -7,7 +9,7 @@ import fi.utu.tech.distributed.gorilla.views.objects.ObjectView;
 import fi.utu.tech.oomkit.canvas.Canvas;
 import fi.utu.tech.oomkit.canvas.Point2D;
 
-public class Building extends ProxyGameObject implements ObjectView {
+public class Building extends ProxyGameObject implements ObjectView,Serializable {
     private final BuildingView view;
     final transient private Point2D tmp = new Point2D();
 

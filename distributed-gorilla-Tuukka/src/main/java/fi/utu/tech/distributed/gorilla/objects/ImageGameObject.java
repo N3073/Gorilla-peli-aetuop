@@ -1,5 +1,7 @@
 package fi.utu.tech.distributed.gorilla.objects;
 
+import java.io.Serializable;
+
 import fi.utu.tech.distributed.gorilla.AssetManager;
 import fi.utu.tech.distributed.gorilla.engine.Engine;
 import fi.utu.tech.distributed.gorilla.engine.ProxyGameObject;
@@ -8,7 +10,7 @@ import fi.utu.tech.oomkit.canvas.Canvas;
 import fi.utu.tech.oomkit.canvas.Point2D;
 import javafx.scene.image.Image;
 
-abstract class ImageGameObject extends ProxyGameObject implements ObjectView {
+abstract class ImageGameObject extends ProxyGameObject implements ObjectView,Serializable {
     protected int zOrder= 0;
     protected final Image img;
     final transient private Point2D tmp = new Point2D();

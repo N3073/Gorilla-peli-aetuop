@@ -1,12 +1,13 @@
 package fi.utu.tech.distributed.gorilla.logic;
 
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * Represents a game turn
  * TODO: make compatible with network play
  */
-public final class Turn {
+public final class Turn implements Serializable{
     /**
      * Turn id. The next turn will have an id of this.id+1
      */
