@@ -321,7 +321,6 @@ public class GorillaLogic implements GraphicalAppLogic {
      */
     private void initMPGame() {
     	otherPlayers.clear();
-    	System.out.println(otherPlayers.size());
         double h = getCanvas().getHeight();
         ArrayList<String> contacts = getPlayers();
         
@@ -334,7 +333,6 @@ public class GorillaLogic implements GraphicalAppLogic {
         names.add(myName);
         for (Player player : otherPlayers)  names.add(player.name);
         GameConfiguration configuration = new GameConfiguration(gameSeed, h, names);
-    	System.out.println(otherPlayers.size());
         gameState = new GameState(configuration, myName, new LinkedBlockingQueue<>(), otherPlayers);
         verkko.broadcast(gameState);
         views.setGameState(gameState);
@@ -411,15 +409,26 @@ public class GorillaLogic implements GraphicalAppLogic {
                 case "quit":
                 case "exit":
                     Platform.exit();
+                    updateMenuInfo();
                     break;
                 case "name":
                     handleNameChange(rest);
+                    updateMenuInfo();
                     break;
                 case "s":
                 case "chat":
                 case "say":
                     handleChatMessage(new ChatMessage(myName, rest));
+                    updateMenuInfo();
                     break;
+                case "g":
+                	System.out.println("g painettu");
+                	ArrayList<String> pelaajat= getPlayers();
+                	for(int i = 0; i<pelaajat.size();i++) {
+                		System.out.println(pelaajat.get(i));
+                	}System.out.println("pingi lähetettty");
+                	updateMenuInfo();
+                	break;
                 case "a":
                 case "k":
                 case "angle":
@@ -435,6 +444,7 @@ public class GorillaLogic implements GraphicalAppLogic {
                     } catch (IllegalArgumentException e) {
                         System.out.println(e.getMessage());
                     }
+                    updateMenuInfo();
                     break;
                 case "ip":
                 case "IP":
@@ -444,6 +454,7 @@ public class GorillaLogic implements GraphicalAppLogic {
                 	}catch(Exception e) {
                 		System.out.println("Koneeseen osoitteessa " + rest + " ei voitu yhdistää");
                 	}
+                	updateMenuInfo();
                 	break;
                 case "v":
                 case "n":
@@ -460,6 +471,7 @@ public class GorillaLogic implements GraphicalAppLogic {
                     } catch (IllegalArgumentException e) {
                         System.out.println(e.getMessage());
                     }
+                    updateMenuInfo();
                     break;
             }
         }

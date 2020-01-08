@@ -213,28 +213,35 @@ public class Mesh extends Thread{
         					ChatMessage message = (ChatMessage) p;
 
         					System.out.println(message.sender +": " + message.contents + p.getToken());
+        					broadcast(p);
         				}else if(p instanceof PlayerUpdate) {
         					logic.updateGameState((PlayerUpdate) p);
+        					broadcast(p);
         				}else if(p instanceof GameState) {
+        					broadcast(p);
         					logic.loadGameState((GameState) p);
         					logic.setMode(GameMode.Game);
         					logic.views.setGameState((GameState)p);
+        					
         				}else if(p instanceof Ping){
+        					System.out.println("vastaaan otettu ping");
             				Ping ping = ((Ping)p);
             				if(ping.senderId == id && ping.echo==true) {
             					contacts=((Ping)p).contacts;
-            					System.out.println(contacts.size());
+            					System.out.println("vastaaan otettu ping"+contacts.size());
             				} else if(names.size()==1) {
             					ping.contacts.add(id);
             					broadcast(new Ping(ping));
             					
             				} else if(ping.echo==true) {
+            					
             					ping.contacts.add(id);
             					System.out.println(contacts.size());
+            					broadcast(p);
             				}
             			}
         				
-        				broadcast(p);
+        				
         			
         				}
         				
