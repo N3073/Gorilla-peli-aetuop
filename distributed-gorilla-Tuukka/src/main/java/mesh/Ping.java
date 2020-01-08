@@ -10,12 +10,12 @@ public class Ping extends ViestiLuokka{
 		super();
 		this.contacts= new ArrayList<String>();
 		this.senderId = senderId;
-		echo = false;
+		this.echo = false;
 	}
 	public Ping(Ping ping) {
 		super();
 		this.senderId = ping.senderId;
 		this.contacts=ping.contacts;
-		echo = true;
+		this.echo = true;
 	}
 }
