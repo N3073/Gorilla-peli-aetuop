@@ -226,7 +226,7 @@ public class Mesh extends Thread{
         				}else if(p instanceof Ping){
         					System.out.println("vastaaan otettu ping");
             				Ping ping = ((Ping)p);
-            				if(ping.senderId == id && ping.echo) {
+            				if(ping.senderId.equals(id) && ping.echo) {
             					contacts=((Ping)p).contacts;
             					System.out.println("vastaaan otettu ping"+contacts.size());
             				} else if(names.size()==1) {
