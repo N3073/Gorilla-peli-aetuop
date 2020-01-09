@@ -179,7 +179,7 @@ public class Mesh extends Thread{
     private class Handler extends Thread {
         private String name = new Random().nextInt() + "" + new Random().nextInt();
         private final Socket socket;
-        private final boolean og;
+        private boolean og;
 
         private ObjectOutputStream oOut;
         private ObjectInputStream oIn;
@@ -222,6 +222,7 @@ public class Mesh extends Thread{
         				interrupt();
         			}
         		}
+        		this.og=false;
         		// tarkastetaan onko viesti uusi ja merkitään muistiin
         		while(true) {
         			
