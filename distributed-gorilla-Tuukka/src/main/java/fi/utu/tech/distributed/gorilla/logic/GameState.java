@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 public class GameState extends ViestiLuokka implements Scheduled,Serializable {
     public final GameConfiguration configuration;
     private final List<Player> players = new ArrayList<>();
-    private final Player me;
+    private  Player me;
     private final GameWorld gameWorld;
     private Turn currentTurn;
     private boolean active = true;
@@ -39,6 +39,21 @@ public class GameState extends ViestiLuokka implements Scheduled,Serializable {
 
         me = new Player(localPlayerName, new LinkedBlockingQueue<Move>(), true);
         players.add(me);
+        players.addAll(remotePlayers);
+
+        gameWorld = new GameWorld(configuration, players);
+
+        // note that the randomSource is constructed from the gameWorld.initialStateSeed
+        // and not used by anything else -> deterministic sequence of turn events
+        {
+            Random randomSource = new Random(gameWorld.initialStateSeed);
+            currentTurn = new Turn(randomSource, 1, 0, configuration.turnLength);
+        }
+        init();
+    }
+    public GameState(GameConfiguration configuration, LinkedBlockingQueue<Move> localMoves, List<Player> remotePlayers) {
+        super();
+    	this.configuration = configuration;
         players.addAll(remotePlayers);
 
         gameWorld = new GameWorld(configuration, players);

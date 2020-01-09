@@ -17,6 +17,7 @@ import java.util.Set;
 //import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import fi.utu.tech.distributed.gorilla.logic.ChatMessage;
 import fi.utu.tech.distributed.gorilla.logic.GameMode;
@@ -243,9 +244,11 @@ public class Mesh extends Thread{
         				}else if(p instanceof GameStateUpdate) {
         					broadcast(p);
         					System.out.println("konfiguraatio läpi");
-        					/*logic.loadGameState(((GameStateUpdate) p).gs);
+        					GameStateUpdate gsu = (GameStateUpdate) p;
+        					GameState gamestate = new GameState(gsu.conf,new LinkedBlockingQueue<>(),gsu.remotePlayers);
+        					
         					logic.setMode(GameMode.Game);
-        					logic.views.setGameState(((GameStateUpdate)p).gs);*/
+        					logic.views.setGameState(gamestate);
         					
         					
         					
