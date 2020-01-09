@@ -244,7 +244,8 @@ public class GorillaLogic implements GraphicalAppLogic {
     	if (verkko.newgame) {
     		verkko.newgame = false;
     		this.setMode(GameMode.Game);
-			this.views.setGameState(new GameState(verkko.newGameState.conf,new LinkedBlockingQueue<>(),verkko.newGameState.remotePlayers));
+			gameState = new GameState(verkko.newGameState.conf,new LinkedBlockingQueue<>(),verkko.newGameState.remotePlayers);
+			views.setGameState(gameState);
     	}
     	updateMenuInfo();
         handleConsoleInput();
