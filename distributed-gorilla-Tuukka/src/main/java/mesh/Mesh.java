@@ -236,14 +236,16 @@ public class Mesh extends Thread{
         			ViestiLuokka p = (ViestiLuokka) oIn.readObject();
         			if(!tokenExists(p.getToken())) {
         				if(p instanceof ChatMessage) {
+        					broadcast(p);
         					ChatMessage message = (ChatMessage) p;
         					System.out.println(message.sender +": " + message.contents);
-        					broadcast(p);
+        					
         					
         					
         					
         					
         				}else if(p instanceof PlayerUpdate) {
+        					broadcast(p);
         					PlayerUpdate pu = (PlayerUpdate)p;
         					logic.handleThrowBanana(pu.mtb,pu.name);
         					

@@ -406,7 +406,7 @@ public class GorillaLogic implements GraphicalAppLogic {
      * */
     public synchronized void handleThrowBanana(MoveThrowBanana mtb, String nimi) {
     	addPlayerMove(nimi, mtb);
-    	verkko.broadcast(new PlayerUpdate(verkko.getID(), mtb));
+    	
     	
     }
     /**
@@ -491,6 +491,7 @@ public class GorillaLogic implements GraphicalAppLogic {
                         double velocity = Double.parseDouble(rest);
                         MoveThrowBanana mtb = new MoveThrowBanana(Double.NaN, velocity);
                         	if(verkko.names.size()>0) {
+                        		verkko.broadcast(new PlayerUpdate(verkko.getID(), mtb));
                         		handleThrowBanana(mtb,verkko.getID());
                         	}else {
                         		handleThrowBanana(mtb);
