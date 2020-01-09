@@ -242,9 +242,10 @@ public class Mesh extends Thread{
         					broadcast(p);
         				}else if(p instanceof GameStateUpdate) {
         					broadcast(p);
-        					logic.loadGameState(((GameStateUpdate) p).gs);
+        					System.out.println("konfiguraatio läpi");
+        					/*logic.loadGameState(((GameStateUpdate) p).gs);
         					logic.setMode(GameMode.Game);
-        					logic.views.setGameState(((GameStateUpdate)p).gs);
+        					logic.views.setGameState(((GameStateUpdate)p).gs);*/
         					
         					
         					
