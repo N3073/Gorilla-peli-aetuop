@@ -290,7 +290,7 @@ public class GorillaLogic implements GraphicalAppLogic {
         //verkko2.connect(addr ,Integer.parseInt(port));
         //verkko2.broadcast(new ChatMessage(myName,"tervehdys verkko 2"));
         }catch(Exception e) {
-        	e.printStackTrace();
+        	System.out.println(e);
         }
         // ...or at least somebody should be
     }
@@ -452,9 +452,9 @@ public class GorillaLogic implements GraphicalAppLogic {
                 case "IP":
                 	try {
                 		connectToServer(rest, "1234");
-                		System.out.println("Yhdistetty koneeseen " + rest);
+                		//System.out.println("Yhdistetty koneeseen " + rest);
                 	}catch(Exception e) {
-                		System.out.println("Koneeseen osoitteessa " + rest + " ei voitu yhdistää");
+                		//System.out.println("Koneeseen osoitteessa " + rest + " ei voitu yhdistää");
                 	}
                 	updateMenuInfo();
                 	break;

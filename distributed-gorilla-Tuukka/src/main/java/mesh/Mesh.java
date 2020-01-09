@@ -161,7 +161,7 @@ public class Mesh extends Thread{
 
 	public void run() {
 		
-		System.out.println("Starting the server..");
+	//	System.out.println("Starting the server..");
         
         try (var listener = new ServerSocket(port)) {
             System.out.println("Listening to port " + port + " at " + listener.getInetAddress());
@@ -169,7 +169,7 @@ public class Mesh extends Thread{
                 pool.execute(new Handler(listener.accept(),false));
             }
         } catch (Exception e) {
-        	e.printStackTrace();
+        	System.out.println(e);
 		}
 	}
 	 /**
@@ -222,6 +222,7 @@ public class Mesh extends Thread{
         				interrupt();
         			}
         		}
+        		System.out.println("Yhdistetty koneeseen");
         		this.og=false;
         		// tarkastetaan onko viesti uusi ja merkitään muistiin
         		while(true) {
