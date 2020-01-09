@@ -30,7 +30,7 @@ public class GorillaLogic implements GraphicalAppLogic {
     public Views views;
 
     private GameState gameState;
-    
+    public boolean newgame;
     private GameMode gameMode;
 
     protected String myName = "Mää"+new Random().nextInt();
@@ -241,6 +241,12 @@ public class GorillaLogic implements GraphicalAppLogic {
      */
     @Override
     public void tick() {
+    	if (newgame) {
+    		newgame = false;
+    		this.setMode(GameMode.Game);
+			this.views.setGameState(gameState);
+    	}
+    	updateMenuInfo();
         handleConsoleInput();
         toggleGameMode();
         views.redraw();

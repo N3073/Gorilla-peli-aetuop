@@ -245,14 +245,12 @@ public class Mesh extends Thread{
         					broadcast(p);
         					System.out.println("konfiguraatio läpi");
         					GameStateUpdate gsu = (GameStateUpdate) p;
-        					GameState gamestate = new GameState(gsu.conf,new LinkedBlockingQueue<>(),gsu.remotePlayers);
-        					
-        					logic.setMode(GameMode.Game);
-        					logic.views.setGameState(gamestate);
+        					logic.loadGameState(new GameState(gsu.conf,new LinkedBlockingQueue<>(),gsu.remotePlayers));
+        					logic.newgame = true;
         					
         					
         					
-        					
+        				
         					
         					
         					
