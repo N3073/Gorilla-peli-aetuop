@@ -39,7 +39,7 @@ public class Mesh extends Thread{
 	private GorillaLogic logic;
 	
 	public boolean newgame;
-	public GameState newGameState;
+	public GameStateUpdate newGameState;
 	
 	
     public Mesh(int port, GorillaLogic logic) {
@@ -250,7 +250,7 @@ public class Mesh extends Thread{
         					broadcast(p);
         					System.out.println("konfiguraatio läpi");
         					GameStateUpdate gsu = (GameStateUpdate) p;
-        					newGameState=new GameState(gsu.conf,new LinkedBlockingQueue<>(),gsu.remotePlayers);
+        					newGameState=gsu;
         					newgame = true;
         					
         					
