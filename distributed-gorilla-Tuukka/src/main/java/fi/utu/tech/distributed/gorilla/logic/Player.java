@@ -3,13 +3,14 @@ package fi.utu.tech.distributed.gorilla.logic;
 import fi.utu.tech.oomkit.canvas.Point2D;
 import mesh.PlayerUpdate;
 
+import java.io.Serializable;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * TODO: may need modifications for network play
  * depending on your implementation, probably not
  */
-public class Player {
+public class Player implements Serializable{
     /**
      * Player's name.
      */
