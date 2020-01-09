@@ -273,6 +273,8 @@ public class GorillaLogic implements GraphicalAppLogic {
      * @param port The port the mesh should listen to for new nodes
      */
     protected void startServer(String port) {
+    	System.out.println("Etene valikossa painamalla oikeaa nuolinäppäintä");
+    	System.out.println("Yhdistä koneeseen kirjoittamalla 'ip <osoite>'");
         System.out.println("Starting server at port " + port);
         this.verkko = new Mesh(Integer.parseInt(port), this);
     	verkko.start();
@@ -394,9 +396,16 @@ public class GorillaLogic implements GraphicalAppLogic {
      */
     protected void handleThrowBanana(MoveThrowBanana mtb) {
         gameState.addLocalPlayerMove(mtb);
-        verkko.broadcast(mtb);
+       
     }
-
+    /*
+     * multiplayer banana throwing
+     * 
+     * */
+    public synchronized void handleThrowBanana(MoveThrowBanana mtb, String nimi) {
+    	addPlayerMove(nimi, mtb);
+    	verkko.broadcast(new PlayerUpdate(verkko.getID(), mtb));
+    }
     /**
      * Handles name change. Fired by "name" command
      * @param newName Your new name
@@ -447,7 +456,11 @@ public class GorillaLogic implements GraphicalAppLogic {
                     try {
                         double angle = Double.parseDouble(rest);
                         MoveThrowBanana mtb = new MoveThrowBanana(angle, Double.NaN);
-                        handleThrowBanana(mtb);
+                        if(verkko.names.size()>0) {
+                    		handleThrowBanana(mtb,verkko.getID());
+                    	}else {
+                    		handleThrowBanana(mtb);
+                    	}
                         System.out.println("Asetettu kulma: " + angle);
                     } catch (NumberFormatException e) {
                         System.out.println("Virheellinen komento, oikea on: angle <liukuluku -45..225>");
@@ -474,7 +487,11 @@ public class GorillaLogic implements GraphicalAppLogic {
                     try {
                         double velocity = Double.parseDouble(rest);
                         MoveThrowBanana mtb = new MoveThrowBanana(Double.NaN, velocity);
-                        handleThrowBanana(mtb);
+                        	if(verkko.names.size()>0) {
+                        		handleThrowBanana(mtb,verkko.getID());
+                        	}else {
+                        		handleThrowBanana(mtb);
+                        	}
                         System.out.println("Asetettu nopeus: " + velocity);
                     } catch (NumberFormatException e) {
                         System.out.println("Virheellinen komento, oikea on: velocity <liukuluku 0..150>");

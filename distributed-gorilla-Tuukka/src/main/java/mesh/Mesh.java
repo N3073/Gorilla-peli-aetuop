@@ -30,7 +30,7 @@ public class Mesh extends Thread{
      * @param port Portti, jossa uusien vertaisten liittymispyyntöjä kuunnellaan
      */
 	private final String id;
-	private Set<Handler> names = new HashSet<>();
+	public Set<Handler> names = new HashSet<>();
 	private final int port;
 	private  Set<Long> tokens1 = new HashSet<>();
 	private  Set<Long> tokens2 = new HashSet<>();
@@ -175,7 +175,7 @@ public class Mesh extends Thread{
                 pool.execute(new Handler(listener.accept(),false));
             }
         } catch (Exception e) {
-        	System.out.println(e);
+        	//System.out.println(e);
 		}
 	}
 	 /**
@@ -244,8 +244,9 @@ public class Mesh extends Thread{
         					
         					
         				}else if(p instanceof PlayerUpdate) {
-        					logic.updateGameState((PlayerUpdate) p);
-        					broadcast(p);
+        					PlayerUpdate pu = (PlayerUpdate)p;
+        					logic.handleThrowBanana(pu.mtb,pu.name);
+        					
         				}else if(p instanceof GameStateUpdate) {
         					broadcast(p);
         					System.out.println("konfiguraatio läpi");
@@ -281,11 +282,10 @@ public class Mesh extends Thread{
         					
         					
         				}else if(p instanceof Ping){
-        					System.out.println("vastaaan otettu ping");
             				Ping ping = ((Ping)p);
             				if(ping.senderId.equals(id) && ping.echo) {
             					contacts=((Ping)p).contacts;
-            					System.out.println("vastaaan otettu ping"+contacts.size());
+            					//System.out.println("vastaaan otettu ping"+contacts.size());
             				} else if(names.size()==1) {
             					ping.contacts.add(id);
             					broadcast(new Ping(ping));
