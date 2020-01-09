@@ -252,7 +252,9 @@ public class Mesh extends Thread{
         				}else if(p instanceof GameStateUpdate) {
         					broadcast(p);
         					System.out.println("konfiguraatio läpi");
+        					
         					GameStateUpdate gsu = (GameStateUpdate) p;
+        					logic.setOtherPlayers(gsu.remotePlayers);
         					newGameState=gsu;
         					newgame = true;
         					

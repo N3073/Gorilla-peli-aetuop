@@ -58,7 +58,7 @@ public class GorillaLogic implements GraphicalAppLogic {
     private final boolean verboseMessages = false;
 
     // List of players, artificial or real
-    private final List<Player> otherPlayers = new ArrayList<>();
+    private  List<Player> otherPlayers = new ArrayList<>();
 
     // Helpers for menu system. No need to modify
     private int c = 0;
@@ -220,7 +220,7 @@ public class GorillaLogic implements GraphicalAppLogic {
      * Resets the single player game
      */
     public void resetGame() {
-        otherPlayers.clear();
+        getOtherPlayers().clear();
         gameState = null;
     }
 
@@ -230,7 +230,7 @@ public class GorillaLogic implements GraphicalAppLogic {
      */
     public void joinGame(String name) {
 //        if (otherPlayers.size() + 1 < maxPlayers) {
-            otherPlayers.add(new Player(name, new LinkedBlockingQueue<>(), false));
+            getOtherPlayers().add(new Player(name, new LinkedBlockingQueue<>(), false));
 //        }
     }
 
@@ -318,11 +318,11 @@ public class GorillaLogic implements GraphicalAppLogic {
 
         List<String> names = new LinkedList<>();
         names.add(myName);
-        for (Player player : otherPlayers) names.add(player.name);
+        for (Player player : getOtherPlayers()) names.add(player.name);
 
         GameConfiguration configuration = new GameConfiguration(gameSeed, h, names);
 
-        gameState = new GameState(configuration, myName, new LinkedBlockingQueue<>(), otherPlayers);
+        gameState = new GameState(configuration, myName, new LinkedBlockingQueue<>(), getOtherPlayers());
         views.setGameState(gameState);
     }
     
@@ -330,7 +330,7 @@ public class GorillaLogic implements GraphicalAppLogic {
      * Starts a new multiplayer game
      */
     private void initMPGame() {
-    	otherPlayers.clear();
+    	getOtherPlayers().clear();
         double h = getCanvas().getHeight();
         ArrayList<String> contacts = getPlayers();
         
@@ -341,10 +341,10 @@ public class GorillaLogic implements GraphicalAppLogic {
         joinGame(verkko.getID());
         List<String> names = new LinkedList<>();
         names.add(myName);
-        for (Player player : otherPlayers)  names.add(player.name);
+        for (Player player : getOtherPlayers())  names.add(player.name);
         GameConfiguration configuration = new GameConfiguration(gameSeed, h, names);
-        gameState = new GameState(configuration, new LinkedBlockingQueue<>(), otherPlayers);
-        verkko.broadcast(new GameStateUpdate(configuration,otherPlayers));
+        gameState = new GameState(configuration, new LinkedBlockingQueue<>(), getOtherPlayers());
+        verkko.broadcast(new GameStateUpdate(configuration,getOtherPlayers()));
         views.setGameState(gameState);
     }
     private ArrayList<String> getPlayers() {
@@ -362,7 +362,7 @@ public class GorillaLogic implements GraphicalAppLogic {
      * @param move The move to be added
      */
     private void addPlayerMove(String player, Move move) {
-        for (Player p : otherPlayers)
+        for (Player p : getOtherPlayers())
             if (p.name.equals(player)) {
             	System.out.println(verkko.getID()+" liikuttaa "+p.name);
                 p.moves.add(move);
@@ -514,12 +514,12 @@ public class GorillaLogic implements GraphicalAppLogic {
      */
     private void moveAIplayers() {
         // currently a rather primitive random AI
-        if (new Random().nextInt(50) < 4 && !otherPlayers.isEmpty() && verkko.names.size()==0) {
+        if (new Random().nextInt(50) < 4 && !getOtherPlayers().isEmpty() && verkko.names.size()==0) {
             Move move = new MoveThrowBanana(
                     new Random().nextDouble() * 180,
                     35 + new Random().nextDouble() * 35);
 
-            addPlayerMove("Kingkong " + (new Random().nextInt(otherPlayers.size()) + 1), move);
+            addPlayerMove("Kingkong " + (new Random().nextInt(getOtherPlayers().size()) + 1), move);
         }
     }
 
@@ -527,7 +527,7 @@ public class GorillaLogic implements GraphicalAppLogic {
      * Updates the info on the bottom of the menu
      */
     protected void updateMenuInfo() {
-        views.setMenuInfo(new String[]{"Pelaajia: " + (otherPlayers.size() + 1), String.format("Yhdistettyjä koneita: %s", verkko.size()), "Peli aktiivinen: " + (gameState != null)});
+        views.setMenuInfo(new String[]{"Pelaajia: " + (getOtherPlayers().size() + 1), String.format("Yhdistettyjä koneita: %s", verkko.size()), "Peli aktiivinen: " + (gameState != null)});
     }
 
     /**
@@ -558,4 +558,14 @@ public class GorillaLogic implements GraphicalAppLogic {
 			break;
         }
     }
+
+
+	public List<Player> getOtherPlayers() {
+		return otherPlayers;
+	}
+
+
+	public void setOtherPlayers(List<Player> otherPlayers) {
+		this.otherPlayers = otherPlayers;
+	}
 }
