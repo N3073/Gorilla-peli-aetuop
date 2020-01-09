@@ -335,7 +335,7 @@ public class GorillaLogic implements GraphicalAppLogic {
         for (Player player : otherPlayers)  names.add(player.name);
         GameConfiguration configuration = new GameConfiguration(gameSeed, h, names);
         gameState = new GameState(configuration, myName, new LinkedBlockingQueue<>(), otherPlayers);
-        verkko.broadcast(new GameStateUpdate(gameState));
+        verkko.broadcast(new GameStateUpdate(configuration));
         views.setGameState(gameState);
     }
     private ArrayList<String> getPlayers() {
