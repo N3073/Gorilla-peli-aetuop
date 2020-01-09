@@ -460,6 +460,7 @@ public class GorillaLogic implements GraphicalAppLogic {
                         double angle = Double.parseDouble(rest);
                         MoveThrowBanana mtb = new MoveThrowBanana(angle, Double.NaN);
                         if(verkko.names.size()>0) {
+                        	verkko.broadcast(new PlayerUpdate(verkko.getID(), mtb));
                     		handleThrowBanana(mtb,verkko.getID());
                     	}else {
                     		handleThrowBanana(mtb);
@@ -513,7 +514,7 @@ public class GorillaLogic implements GraphicalAppLogic {
      */
     private void moveAIplayers() {
         // currently a rather primitive random AI
-        if (new Random().nextInt(50) < 4 && !otherPlayers.isEmpty()) {
+        if (new Random().nextInt(50) < 4 && !otherPlayers.isEmpty() && verkko.names.size()==0) {
             Move move = new MoveThrowBanana(
                     new Random().nextDouble() * 180,
                     35 + new Random().nextDouble() * 35);
