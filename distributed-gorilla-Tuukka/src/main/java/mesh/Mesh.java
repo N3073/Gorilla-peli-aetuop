@@ -240,11 +240,11 @@ public class Mesh extends Thread{
         				}else if(p instanceof PlayerUpdate) {
         					logic.updateGameState((PlayerUpdate) p);
         					broadcast(p);
-        				}else if(p instanceof GameState) {
+        				}else if(p instanceof GameStateUpdate) {
         					broadcast(p);
-        					logic.loadGameState((GameState) p);
+        					logic.loadGameState(((GameStateUpdate) p).gs);
         					logic.setMode(GameMode.Game);
-        					logic.views.setGameState((GameState)p);
+        					logic.views.setGameState(((GameStateUpdate)p).gs);
         					
         					
         					
@@ -261,6 +261,7 @@ public class Mesh extends Thread{
         					
         					
         				}else if(p instanceof ResignationLetter) {
+        					System.out.println("connection lost");
         					names.remove(this);
         					socket.close();
             				interrupt();
