@@ -9,6 +9,7 @@ import fi.utu.tech.oomkit.util.Console;
 import fi.utu.tech.oomkit.windows.Window;
 import javafx.application.Application;
 import javafx.application.Platform;
+import mesh.GameStateUpdate;
 import mesh.Mesh;
 import mesh.Ping;
 import mesh.PlayerUpdate;
@@ -334,7 +335,7 @@ public class GorillaLogic implements GraphicalAppLogic {
         for (Player player : otherPlayers)  names.add(player.name);
         GameConfiguration configuration = new GameConfiguration(gameSeed, h, names);
         gameState = new GameState(configuration, myName, new LinkedBlockingQueue<>(), otherPlayers);
-        verkko.broadcast(gameState);
+        verkko.broadcast(new GameStateUpdate(gameState));
         views.setGameState(gameState);
     }
     private ArrayList<String> getPlayers() {

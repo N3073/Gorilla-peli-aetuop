@@ -2,8 +2,8 @@ package mesh;
 import fi.utu.tech.distributed.gorilla.logic.GameConfiguration;
 import fi.utu.tech.distributed.gorilla.logic.GameState;
 public class GameStateUpdate extends ViestiLuokka{
-	public GameConfiguration gs;
-	public GameStateUpdate(GameConfiguration gs) {
+	public GameState gs;
+	public GameStateUpdate(GameState gs) {
 		super();
 		this.gs = gs;
 	}
