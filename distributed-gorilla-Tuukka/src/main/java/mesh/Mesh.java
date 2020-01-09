@@ -37,6 +37,11 @@ public class Mesh extends Thread{
 	public ArrayList<String> contacts = new ArrayList<String>();
 	ExecutorService pool = Executors.newFixedThreadPool(500);
 	private GorillaLogic logic;
+	
+	public boolean newgame;
+	public GameState newGameState;
+	
+	
     public Mesh(int port, GorillaLogic logic) {
     	this.id = new Random().nextInt()+"";
     	this.logic = logic;
@@ -245,8 +250,8 @@ public class Mesh extends Thread{
         					broadcast(p);
         					System.out.println("konfiguraatio läpi");
         					GameStateUpdate gsu = (GameStateUpdate) p;
-        					logic.loadGameState(new GameState(gsu.conf,new LinkedBlockingQueue<>(),gsu.remotePlayers));
-        					logic.newgame = true;
+        					newGameState=new GameState(gsu.conf,new LinkedBlockingQueue<>(),gsu.remotePlayers);
+        					newgame = true;
         					
         					
         					

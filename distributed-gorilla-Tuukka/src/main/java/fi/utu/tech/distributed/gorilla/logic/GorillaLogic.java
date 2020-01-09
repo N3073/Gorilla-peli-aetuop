@@ -241,10 +241,10 @@ public class GorillaLogic implements GraphicalAppLogic {
      */
     @Override
     public void tick() {
-    	if (newgame) {
-    		newgame = false;
+    	if (verkko.newgame) {
+    		verkko.newgame = false;
     		this.setMode(GameMode.Game);
-			this.views.setGameState(gameState);
+			this.views.setGameState(verkko.newGameState);
     	}
     	updateMenuInfo();
         handleConsoleInput();
