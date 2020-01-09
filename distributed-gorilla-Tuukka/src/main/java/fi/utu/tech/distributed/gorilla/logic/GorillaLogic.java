@@ -77,13 +77,13 @@ public class GorillaLogic implements GraphicalAppLogic {
     public synchronized void loadGameState(GameState gameState) {
     	this.gameState = gameState;
     }
-    public synchronized void updateGameState(PlayerUpdate update) {
+    /*public synchronized void updateGameState(PlayerUpdate update) {
     	for(Player player : gameState.getPlayers()) {
     		if(player.name == update.name) {
     			player.updatePlayer(update);
     		}
     	}
-    }
+    }*/
     // initializes the game logic
     // No need to modify
     @Override
@@ -363,8 +363,10 @@ public class GorillaLogic implements GraphicalAppLogic {
      */
     private void addPlayerMove(String player, Move move) {
         for (Player p : otherPlayers)
-            if (p.name.equals(player))
+            if (p.name.equals(player)) {
+            	System.out.println(verkko.getID()+" liikuttaa "+p.name);
                 p.moves.add(move);
+                }
     }
 
     /**
@@ -405,6 +407,7 @@ public class GorillaLogic implements GraphicalAppLogic {
     public synchronized void handleThrowBanana(MoveThrowBanana mtb, String nimi) {
     	addPlayerMove(nimi, mtb);
     	verkko.broadcast(new PlayerUpdate(verkko.getID(), mtb));
+    	
     }
     /**
      * Handles name change. Fired by "name" command

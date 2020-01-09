@@ -46,7 +46,7 @@ public class Player implements Serializable{
         launchPos.set(s);
     }
     // päivitetään pelaaja meshin yli saadun playerUpdate_luokasta saaduista tiedoista
-    public synchronized void updatePlayer(PlayerUpdate update) {
+    /*public synchronized void updatePlayer(PlayerUpdate update) {
     	if(update.newName == null) {
     		this.name = update.newName;
     	}else {
@@ -54,7 +54,7 @@ public class Player implements Serializable{
     		this.velocity = update.velocity;
     		this.alive = update.alive;
     	}
-    }
+    }*/
     public Point2D getLaunchPosition() {
         return launchPos;
     }
