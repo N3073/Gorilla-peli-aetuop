@@ -3,19 +3,19 @@ package mesh;
 import java.util.ArrayList;
 
 public class Ping extends ViestiLuokka{
-	public ArrayList<String> contacts;
-	public final boolean echo;
 	public final String senderId;
+	public boolean echo;
+	public final String replyId;
 	public Ping(String senderId) {
 		super();
-		this.contacts= new ArrayList<String>();
+		this.echo=false;
 		this.senderId = senderId;
-		this.echo = false;
+		this.replyId="";
 	}
-	public Ping(Ping ping) {
+	public Ping(Ping ping, String replyId) {
 		super();
+		this.echo=true;
 		this.senderId = ping.senderId;
-		this.contacts=ping.contacts;
-		this.echo = true;
+		this.replyId = replyId;
 	}
 }

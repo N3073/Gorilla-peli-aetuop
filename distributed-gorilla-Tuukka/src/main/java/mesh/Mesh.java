@@ -30,36 +30,42 @@ public class Mesh extends Thread{
      * @param port Portti, jossa uusien vertaisten liittymispyyntöjä kuunnellaan
      */
 	private final String id;
-	public Set<Handler> names = new HashSet<>();
+	private Set<Handler> names = new HashSet<>();
 	private final int port;
 	private  Set<Long> tokens1 = new HashSet<>();
 	private  Set<Long> tokens2 = new HashSet<>();
-	public ArrayList<String> contacts = new ArrayList<String>();
-	ExecutorService pool = Executors.newFixedThreadPool(500);
-	private GorillaLogic logic;
-	
-	public boolean newgame;
-	public GameStateUpdate newGameState;
+	private ArrayList<String> contacts = new ArrayList<String>();
+	private ExecutorService pool = Executors.newFixedThreadPool(500);
+	private LinkedBlockingQueue<ViestiLuokka> logicInputs = new LinkedBlockingQueue<ViestiLuokka>();
+
 	
 	
-    public Mesh(int port, GorillaLogic logic) {
+    public Mesh(int port) {
     	this.id = new Random().nextInt()+"";
-    	this.logic = logic;
     	this.port = port;
     	 
 	}
+    public LinkedBlockingQueue<ViestiLuokka> getLogicInputs(){
+    	return this.logicInputs;
+    }
     public int size() {
     	return names.size();
     }
     public String getID() {
     	return this.id;
     }
+    public ArrayList<String> getContacts(){
+    	return this.contacts;
+    }
+    /*public Set<Handler> getNames(){
+    	return this.names;
+    }
    
     /**
      * Lähetä hyötykuorma kaikille vastaanottajille
      * @param o Lähetettävä hyötykuorma
      */
-    public void broadcast(ViestiLuokka o) {
+    public synchronized void broadcast(ViestiLuokka o) {
     	tokenExists(o.getToken());
     	for (Handler saie : names) {
     		//System.out.println(saie.name);
@@ -95,17 +101,7 @@ public class Mesh extends Thread{
     	this.interrupt();
 	}
 
-    /**
-     * Lisää token, eli "viestitunniste"
-     * Käytännössä merkkaa viestin tällä tunnisteella luetuksi
-     * Määreenä private, koska tätä käyttävä luokka on sisäluokka (inner class)
-     * Jos et käytä sisäluokkaa, pitää olla public
-     * @param token Viestitunniste 
-     */
-    /*private void addToken(Long token) {
-    	tokens.add(token);
-    	
-	}*/
+   
 
     /**
      * Tarkista, onko viestitunniste jo olemassa
@@ -126,8 +122,8 @@ public class Mesh extends Thread{
     	}
     	/*
     	 * Vältetään työmuistin täyttyminen poistamalla vanhoja tokeneita.
-    	 * Jos tokens1 tai tokens2 settien koot ylittävät sallitun koon
-    	 * poistetaan vanhempi puolisko poistetaan ja sitä aletaan täyttää uudestaan
+    	 * Jos tokens1 tai tokens2 settien koot ylittävät sallitun koon.
+    	 * tyhjennetään vanhempi puolisko ja sitä aletaan täyttää uudestaan.
     	 * 
     	 * */
     	if(vuoro == 1) {
@@ -186,6 +182,7 @@ public class Mesh extends Thread{
         private String name = new Random().nextInt() + "" + new Random().nextInt();
         private final Socket socket;
         private boolean og;
+        private final String parentId;
 
         private ObjectOutputStream oOut;
         private ObjectInputStream oIn;
@@ -235,7 +232,7 @@ public class Mesh extends Thread{
         			
         			ViestiLuokka p = (ViestiLuokka) oIn.readObject();
         			if(!tokenExists(p.getToken())) {
-        				if(p instanceof ChatMessage) {
+        				/*if(p instanceof ChatMessage) {
         					broadcast(p);
         					ChatMessage message = (ChatMessage) p;
         					System.out.println(message.sender +": " + message.contents);
@@ -265,7 +262,8 @@ public class Mesh extends Thread{
         					
         					
         					
-        				}else if(p instanceof HandShake){
+        				}*/
+        				if(p instanceof HandShake){
         					HandShake rebound = (HandShake)p;
         					rebound.setValidation();
         					oOut.writeObject(rebound);
@@ -274,9 +272,10 @@ public class Mesh extends Thread{
         					
         				}else if(p instanceof ResignationLetter) {
         					System.out.println("connection lost");
-        					names.remove(this);
         					socket.close();
+        					names.remove(this);
             				interrupt();
+            				break;
         					
         					
         					
@@ -286,19 +285,16 @@ public class Mesh extends Thread{
         					
         					
         				}else if(p instanceof Ping){
-            				Ping ping = ((Ping)p);
+            				Ping ping = (Ping)p;
             				if(ping.senderId.equals(id) && ping.echo) {
-            					contacts=((Ping)p).contacts;
+            					contacts.add(((Ping)p).replyId);
             					//System.out.println("vastaaan otettu ping"+contacts.size());
-            				} else if(names.size()==1) {
-            					ping.contacts.add(id);
-            					broadcast(new Ping(ping));
-            					
-            				} else if(ping.echo) {
-            					
-            					ping.contacts.add(id);
-            					broadcast(p);
+            				}else {
+            					broadcast(new Ping((Ping)p,id));
             				}
+            			}else {
+            				broadcast(p);
+            				logicInputs.put(p);
             			}
         				
         				

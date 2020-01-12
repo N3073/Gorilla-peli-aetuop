@@ -13,6 +13,8 @@ import mesh.GameStateUpdate;
 import mesh.Mesh;
 import mesh.Ping;
 import mesh.PlayerUpdate;
+import mesh.ViestiLuokka;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -241,12 +243,35 @@ public class GorillaLogic implements GraphicalAppLogic {
      */
     @Override
     public void tick() {
-    	if (verkko.newgame) {
+    	LinkedBlockingQueue<ViestiLuokka> logicUpdates = verkko.getLogicInputs();
+    	for(int i = 0; i<logicUpdates.size();i++ ) {
+    		ViestiLuokka genericLogicUpdate = logicUpdates.poll();
+    		if( genericLogicUpdate instanceof ChatMessage) {
+				
+				ChatMessage message = (ChatMessage) genericLogicUpdate;
+				System.out.println(message.sender +": " + message.contents);
+			}else if(genericLogicUpdate instanceof PlayerUpdate) {
+				
+				PlayerUpdate pu = (PlayerUpdate)genericLogicUpdate;
+				handleThrowBanana(pu.mtb,pu.name);
+				
+			}else if(genericLogicUpdate instanceof GameStateUpdate) {
+				
+				System.out.println("konfiguraatio läpi");
+				
+				GameStateUpdate newGameState = (GameStateUpdate) genericLogicUpdate;
+				setOtherPlayers(newGameState.getRemotePlayers());
+				this.setMode(GameMode.Game);
+				gameState = new GameState(newGameState.getConf(),new LinkedBlockingQueue<>(),newGameState.getRemotePlayers());
+				views.setGameState(gameState);	
+			}
+    	}
+    	/*if (verkko.newgame) {
     		verkko.newgame = false;
     		this.setMode(GameMode.Game);
 			gameState = new GameState(verkko.newGameState.conf,new LinkedBlockingQueue<>(),verkko.newGameState.remotePlayers);
 			views.setGameState(gameState);
-    	}
+    	}*/
     	updateMenuInfo();
         handleConsoleInput();
         toggleGameMode();
@@ -276,7 +301,7 @@ public class GorillaLogic implements GraphicalAppLogic {
     	System.out.println("Etene valikossa painamalla oikeaa nuolinäppäintä");
     	System.out.println("Yhdistä koneeseen kirjoittamalla 'ip <osoite>'");
         System.out.println("Starting server at port " + port);
-        this.verkko = new Mesh(Integer.parseInt(port), this);
+        this.verkko = new Mesh(Integer.parseInt(port));
     	verkko.start();
     	//this.verkko2 = new Mesh(Integer.parseInt(port));
     	//verkko2.start();
@@ -353,7 +378,7 @@ public class GorillaLogic implements GraphicalAppLogic {
     	}catch(Exception e) {
     		System.out.println("Nukkuminen ei onnistunut: getPlayers");
     	}
-    	return verkko.contacts;
+    	return verkko.getContacts();
     }
 
     /**
@@ -459,7 +484,7 @@ public class GorillaLogic implements GraphicalAppLogic {
                     try {
                         double angle = Double.parseDouble(rest);
                         MoveThrowBanana mtb = new MoveThrowBanana(angle, Double.NaN);
-                        if(verkko.names.size()>0) {
+                        if(verkko.size()>0) {
                         	verkko.broadcast(new PlayerUpdate(verkko.getID(), mtb));
                     		handleThrowBanana(mtb,verkko.getID());
                     	}else {
@@ -491,7 +516,7 @@ public class GorillaLogic implements GraphicalAppLogic {
                     try {
                         double velocity = Double.parseDouble(rest);
                         MoveThrowBanana mtb = new MoveThrowBanana(Double.NaN, velocity);
-                        	if(verkko.names.size()>0) {
+                        	if(verkko.size()>0) {
                         		verkko.broadcast(new PlayerUpdate(verkko.getID(), mtb));
                         		handleThrowBanana(mtb,verkko.getID());
                         	}else {
@@ -514,7 +539,7 @@ public class GorillaLogic implements GraphicalAppLogic {
      */
     private void moveAIplayers() {
         // currently a rather primitive random AI
-        if (new Random().nextInt(50) < 4 && !getOtherPlayers().isEmpty() && verkko.names.size()==0) {
+        if (new Random().nextInt(50) < 4 && !getOtherPlayers().isEmpty() && verkko.size()==0) {
             Move move = new MoveThrowBanana(
                     new Random().nextDouble() * 180,
                     35 + new Random().nextDouble() * 35);
