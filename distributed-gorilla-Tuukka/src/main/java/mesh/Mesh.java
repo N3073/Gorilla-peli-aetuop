@@ -151,13 +151,12 @@ public class Mesh extends Thread{
     	System.out.println("liitytään osoitteeseen " + addr);
     	try {
                 Socket socket = new Socket(addr, port);
-    			
     			pool.execute(new Handler(socket,true));
     			
         
     		
     	} catch (Exception e) {
-    		System.out.println(e);
+    		System.out.println(e.getLocalizedMessage());
         }
 	}
 

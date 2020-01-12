@@ -315,7 +315,7 @@ public class GorillaLogic implements GraphicalAppLogic {
      */
     protected void connectToServer(String address, String port) {
         try{
-    	System.out.printf("Connecting to server at %s", address, port);
+    	
         System.out.println();
         
         InetAddress addr = InetAddress.getByName(address);
