@@ -182,7 +182,6 @@ public class Mesh extends Thread{
         private String name = new Random().nextInt() + "" + new Random().nextInt();
         private final Socket socket;
         private boolean og;
-        private final String parentId;
 
         private ObjectOutputStream oOut;
         private ObjectInputStream oIn;
