@@ -303,9 +303,9 @@ public class GorillaLogic implements GraphicalAppLogic {
     	System.out.println("Etene valikossa painamalla oikeaa nuolinäppäintä");
     	System.out.println("Yhdistä koneeseen kirjoittamalla 'ip <osoite>'");
     	System.out.println("Esim. 'ip 130.232.65.170'");
-        System.out.println("Starting server at port " + port);
         this.verkko = new Mesh(Integer.parseInt(port));
     	verkko.start();
+
     	//this.verkko2 = new Mesh(Integer.parseInt(port));
     	//verkko2.start();
         // ...or at least somebody should be
