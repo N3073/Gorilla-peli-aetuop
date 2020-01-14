@@ -20,4 +20,7 @@ public class GameStateUpdate extends ViestiLuokka{
 	public List<Player> getRemotePlayers(){
 		return this.remotePlayers;
 	}
+	public void removeSelf(String player) {
+		remotePlayers.remove(player);
+	}
 }

@@ -25,6 +25,7 @@ public class GameState extends ViestiLuokka implements Scheduled,Serializable {
     private final GameWorld gameWorld;
     private Turn currentTurn;
     private boolean active = true;
+    private String myId;
 
     /**
      * Creates a new game state object creating a new local player as well
@@ -51,9 +52,10 @@ public class GameState extends ViestiLuokka implements Scheduled,Serializable {
         }
         init();
     }
-    public GameState(GameConfiguration configuration, LinkedBlockingQueue<Move> localMoves, List<Player> remotePlayers) {
+    public GameState(GameConfiguration configuration, LinkedBlockingQueue<Move> localMoves, List<Player> remotePlayers, String playerID) {
         super();
     	this.configuration = configuration;
+    	this.myId=playerID;
         players.addAll(remotePlayers);
 
         gameWorld = new GameWorld(configuration, players);
@@ -147,7 +149,14 @@ public class GameState extends ViestiLuokka implements Scheduled,Serializable {
     }
 
     public Player getLocalPlayer() {
-        return me;
+    	if(myId != null) {
+    		for(Player player : players) {
+    			if(player.name == myId) {
+    				return player;
+    			}
+    		}
+    	}
+    	return me;
     }
 
     public List<Player> getPlayers() {

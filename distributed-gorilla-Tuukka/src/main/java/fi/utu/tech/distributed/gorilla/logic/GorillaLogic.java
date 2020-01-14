@@ -263,7 +263,7 @@ public class GorillaLogic implements GraphicalAppLogic {
 				
 				GameStateUpdate newGameState = (GameStateUpdate) genericLogicUpdate;
 				setOtherPlayers(newGameState.getRemotePlayers());
-				gameState = new GameState(newGameState.getConf(),new LinkedBlockingQueue<>(),newGameState.getRemotePlayers());
+				gameState = new GameState(newGameState.getConf(),new LinkedBlockingQueue<>(),newGameState.getRemotePlayers(), verkko.getID());
 				this.setMode(GameMode.Game);
 				views.setGameState(gameState);	
 			}
@@ -371,7 +371,7 @@ public class GorillaLogic implements GraphicalAppLogic {
         names.add(myName);
         for (Player player : getOtherPlayers())  names.add(player.name);
         GameConfiguration configuration = new GameConfiguration(gameSeed, h, names);
-        gameState = new GameState(configuration, new LinkedBlockingQueue<>(), getOtherPlayers());
+        gameState = new GameState(configuration, new LinkedBlockingQueue<>(), getOtherPlayers(), verkko.getID());
         verkko.broadcast(new GameStateUpdate(configuration,getOtherPlayers()));
         views.setGameState(gameState);
     }
