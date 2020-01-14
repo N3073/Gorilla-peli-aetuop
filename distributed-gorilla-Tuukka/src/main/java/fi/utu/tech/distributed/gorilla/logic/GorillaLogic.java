@@ -272,7 +272,7 @@ public class GorillaLogic implements GraphicalAppLogic {
 				
 				GameStateUpdate newGameState = (GameStateUpdate) genericLogicUpdate;
 				setOtherPlayers(newGameState.getRemotePlayers());
-				gameState = new GameState(newGameState.getConf(),new LinkedBlockingQueue<>(),newGameState.getRemotePlayers(), verkko.getID());
+				gameState = new GameState(new GameConfiguration(gameSeed, getCanvas().getHeight(), newGameState.getNames()),new LinkedBlockingQueue<>(),newGameState.getRemotePlayers(), verkko.getID());
 				this.setMode(GameMode.Game);
 				views.setGameState(gameState);	
 			}
@@ -382,7 +382,7 @@ public class GorillaLogic implements GraphicalAppLogic {
         for (Player player : getOtherPlayers())  names.add(player.name);
         GameConfiguration configuration = new GameConfiguration(gameSeed, h, names);
         gameState = new GameState(configuration, new LinkedBlockingQueue<>(), getOtherPlayers(), verkko.getID());
-        verkko.broadcast(new GameStateUpdate(configuration,getOtherPlayers()));
+        verkko.broadcast(new GameStateUpdate(names, getOtherPlayers()));
         views.setGameState(gameState);
     }
     private HashMap<String,String> getPlayers() {
