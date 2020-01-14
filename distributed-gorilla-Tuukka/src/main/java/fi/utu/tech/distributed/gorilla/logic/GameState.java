@@ -115,6 +115,7 @@ public class GameState extends ViestiLuokka implements Scheduled,Serializable {
                 System.out.println("Kukaan ei voittanut!");
                 return;
             }
+            
             for (Player player : players)
                 if (player.alive)
                     System.out.println(player.name + " voitti!");
