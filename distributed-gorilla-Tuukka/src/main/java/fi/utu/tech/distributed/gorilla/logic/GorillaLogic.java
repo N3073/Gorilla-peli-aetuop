@@ -124,6 +124,7 @@ public class GorillaLogic implements GraphicalAppLogic {
                     switch (selectedMenuItem) {
                         case 0:
                             // quit active game
+                        	
                             if (gameState != null) {
                                 resetGame();
                                 setMode(GameMode.Menu);
@@ -139,7 +140,7 @@ public class GorillaLogic implements GraphicalAppLogic {
                                 setMode(GameMode.Menu);
                             } else {
                                 setMode(GameMode.Game);
-                                System.out.println("tänne");
+                                
                                initMPGame();
                             }
                             break;
@@ -262,8 +263,8 @@ public class GorillaLogic implements GraphicalAppLogic {
 				
 				GameStateUpdate newGameState = (GameStateUpdate) genericLogicUpdate;
 				setOtherPlayers(newGameState.getRemotePlayers());
-				this.setMode(GameMode.Game);
 				gameState = new GameState(newGameState.getConf(),new LinkedBlockingQueue<>(),newGameState.getRemotePlayers());
+				this.setMode(GameMode.Game);
 				views.setGameState(gameState);	
 			}
     	}
