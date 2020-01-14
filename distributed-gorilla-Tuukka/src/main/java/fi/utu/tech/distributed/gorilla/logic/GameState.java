@@ -151,12 +151,13 @@ public class GameState extends ViestiLuokka implements Scheduled,Serializable {
     public Player getLocalPlayer() {
     	if(myId != null) {
     		for(Player player : players) {
-    			if(player.name == myId) {
+    			if(player.name.equals(myId)) {
     				return player;
     			}
     		}
     	}
     	return me;
+    	
     }
 
     public List<Player> getPlayers() {
