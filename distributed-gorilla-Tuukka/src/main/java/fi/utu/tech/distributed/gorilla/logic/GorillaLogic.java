@@ -35,7 +35,8 @@ public class GorillaLogic implements GraphicalAppLogic {
     public boolean newgame;
     private GameMode gameMode;
 
-    protected String myName = "Mää"+new Random().nextInt();
+    //protected String myName = "Mää"+new Random().nextInt();
+    protected String myName = "Pelaaja";
     protected final int gameSeed = 1;
     protected final int maxPlayers = 2;
     private Mesh verkko;
@@ -300,6 +301,7 @@ public class GorillaLogic implements GraphicalAppLogic {
     protected void startServer(String port) {
     	System.out.println("Etene valikossa painamalla oikeaa nuolinäppäintä");
     	System.out.println("Yhdistä koneeseen kirjoittamalla 'ip <osoite>'");
+    	System.out.println("Esim. 'ip 130.232.65.170'");
         System.out.println("Starting server at port " + port);
         this.verkko = new Mesh(Integer.parseInt(port));
     	verkko.start();
