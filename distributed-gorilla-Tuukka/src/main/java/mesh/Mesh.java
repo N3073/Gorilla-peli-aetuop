@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 //import java.util.Scanner;
@@ -30,6 +31,7 @@ public class Mesh extends Thread{
      * @param port Portti, jossa uusien vertaisten liittymispyyntöjä kuunnellaan
      */
 	private final String id;
+	private String pelaajaNimi = "Pelaaja";
 	private Set<Handler> names = new HashSet<>();
 	private final int port;
 	private  Set<Long> tokens1 = new HashSet<>();
@@ -37,7 +39,7 @@ public class Mesh extends Thread{
 	private ArrayList<String> contacts = new ArrayList<String>();
 	private ExecutorService pool = Executors.newFixedThreadPool(500);
 	private LinkedBlockingQueue<ViestiLuokka> logicInputs = new LinkedBlockingQueue<ViestiLuokka>();
-
+	private HashMap<String,String> playerNames = new HashMap<String, String>();
 	
 	
     public Mesh(int port) {
@@ -45,6 +47,9 @@ public class Mesh extends Thread{
     	this.port = port;
     	 
 	}
+    public void changeName(String nimi) {
+    	this.pelaajaNimi=nimi;
+    }
     public LinkedBlockingQueue<ViestiLuokka> getLogicInputs(){
     	return this.logicInputs;
     }
@@ -54,8 +59,8 @@ public class Mesh extends Thread{
     public String getID() {
     	return this.id;
     }
-    public ArrayList<String> getContacts(){
-    	return this.contacts;
+    public HashMap<String,String> getPlayerNames(){
+    	return this.playerNames;
     }
     /*public Set<Handler> getNames(){
     	return this.names;
@@ -284,11 +289,12 @@ public class Mesh extends Thread{
         					
         				}else if(p instanceof Ping){
             				Ping ping = (Ping)p;
-            				if(ping.senderId.equals(id) && ping.echo) {
+            				if(ping.echo) {
             					contacts.add(((Ping)p).replyId);
+            					playerNames.put(((Ping)p).replyId,((Ping)p).replyName);
             					//System.out.println("vastaaan otettu ping"+contacts.size());
             				}else {
-            					broadcast(new Ping((Ping)p,id));
+            					broadcast(new Ping((Ping)p,id, pelaajaNimi));
             				}
             			}else {
             				broadcast(p);

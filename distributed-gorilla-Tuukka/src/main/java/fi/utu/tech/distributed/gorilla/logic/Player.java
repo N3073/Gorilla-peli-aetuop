@@ -12,10 +12,15 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class Player implements Serializable{
     /**
-     * Player's name.
+     * Player's unique id. Gotten from mesh
      */
+    public final String id;
+    /**
+     * Player name
+     * Mutable
+     * 
+     * */
     public String name;
-
     /**
      * Is this a local player. Might affect e.g. the rendered graphics color.
      */
@@ -36,10 +41,16 @@ public class Player implements Serializable{
     public double velocity = Double.NaN;
     public boolean alive = true;
 
-    public Player(String name, LinkedBlockingQueue<Move> moves, boolean local) {
-        this.name = name;
+    public Player(String id, LinkedBlockingQueue<Move> moves, boolean local) {
+        this.id = id;
         this.moves = moves;
         this.local = local;
+    }
+    public Player(String id,String name, LinkedBlockingQueue<Move> moves, boolean local) {
+        this.id = id;
+        this.moves = moves;
+        this.local = local;
+        this.name = name;
     }
 
     public void setLaunchPosition(Point2D s) {

@@ -17,10 +17,13 @@ import mesh.ViestiLuokka;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import com.sun.javafx.collections.MappingChange.Map;
 
 /**
  * 
@@ -40,6 +43,7 @@ public class GorillaLogic implements GraphicalAppLogic {
     protected final int gameSeed = 1;
     protected final int maxPlayers = 2;
     private Mesh verkko;
+
     //private Mesh verkko2;
 
     // in case the game runs too slow:
@@ -237,6 +241,11 @@ public class GorillaLogic implements GraphicalAppLogic {
             getOtherPlayers().add(new Player(name, new LinkedBlockingQueue<>(), false));
 //        }
     }
+    public void joinGame(String id, String name) {
+//      if (otherPlayers.size() + 1 < maxPlayers) {
+          getOtherPlayers().add(new Player(id, name, new LinkedBlockingQueue<>(), false));
+//      }
+  }
 
     /**
      * Called peridically by OOMkit, makes game to proceed
@@ -360,13 +369,14 @@ public class GorillaLogic implements GraphicalAppLogic {
     private void initMPGame() {
     	getOtherPlayers().clear();
         double h = getCanvas().getHeight();
-        ArrayList<String> contacts = getPlayers();
+        HashMap<String,String> contacts = getPlayers();
         
         // Create maxPlayers-1 AI players
-        for (int i=0; i<contacts.size(); i++) {;
-            joinGame(contacts.get(i));
+        
+        for (String key : verkko.getPlayerNames().keySet()) {
+            joinGame(key,verkko.getPlayerNames().get(key));
         }
-        joinGame(verkko.getID());
+        joinGame(verkko.getID(), myName);
         List<String> names = new LinkedList<>();
         names.add(myName);
         for (Player player : getOtherPlayers())  names.add(player.name);
@@ -375,13 +385,13 @@ public class GorillaLogic implements GraphicalAppLogic {
         verkko.broadcast(new GameStateUpdate(configuration,getOtherPlayers()));
         views.setGameState(gameState);
     }
-    private ArrayList<String> getPlayers() {
+    private HashMap<String,String> getPlayers() {
     	verkko.broadcast(new Ping(verkko.getID()));
     	try{Thread.sleep(1000);
     	}catch(Exception e) {
     		System.out.println("Nukkuminen ei onnistunut: getPlayers");
     	}
-    	return verkko.getContacts();
+    	return verkko.getPlayerNames();
     }
 
     /**
@@ -392,7 +402,7 @@ public class GorillaLogic implements GraphicalAppLogic {
     private void addPlayerMove(String player, Move move) {
         for (Player p : getOtherPlayers())
             if (p.name.equals(player)) {
-            	System.out.println(verkko.getID()+" liikuttaa "+p.name);
+            	//System.out.println(verkko.getID()+" liikuttaa "+p.name);
                 p.moves.add(move);
                 }
     }
@@ -443,6 +453,7 @@ public class GorillaLogic implements GraphicalAppLogic {
      */
     protected void handleNameChange(String newName) {
         myName = newName;
+        verkko.changeName(newName);
     }
 
     /**
