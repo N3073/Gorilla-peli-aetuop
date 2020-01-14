@@ -165,7 +165,7 @@ public class Mesh extends Thread{
 	//	System.out.println("Starting the server..");
         
         try (var listener = new ServerSocket(port)) {
-            System.out.println("Listening to port " + port + " at " + listener.getInetAddress());
+           
             while (true) {
                 pool.execute(new Handler(listener.accept(),false));
             }
