@@ -268,7 +268,7 @@ public class GorillaLogic implements GraphicalAppLogic {
 				
 			}else if(genericLogicUpdate instanceof GameStateUpdate) {
 				
-				System.out.println("konfiguraatio läpi");
+				System.out.println("Moninpeli käynnissä");
 				
 				GameStateUpdate newGameState = (GameStateUpdate) genericLogicUpdate;
 				setOtherPlayers(newGameState.getRemotePlayers());
