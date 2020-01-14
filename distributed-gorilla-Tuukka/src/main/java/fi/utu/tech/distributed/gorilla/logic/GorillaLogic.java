@@ -401,7 +401,7 @@ public class GorillaLogic implements GraphicalAppLogic {
      */
     private void addPlayerMove(String player, Move move) {
         for (Player p : getOtherPlayers())
-            if (p.name.equals(player)) {
+            if (p.id.equals(player)) {
             	//System.out.println(verkko.getID()+" liikuttaa "+p.name);
                 p.moves.add(move);
                 }
