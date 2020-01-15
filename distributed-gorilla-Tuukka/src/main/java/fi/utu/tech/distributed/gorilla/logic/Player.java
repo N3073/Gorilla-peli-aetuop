@@ -41,10 +41,11 @@ public class Player implements Serializable{
     public double velocity = Double.NaN;
     public boolean alive = true;
 
-    public Player(String id, LinkedBlockingQueue<Move> moves, boolean local) {
-        this.id = id;
+    public Player(String name, LinkedBlockingQueue<Move> moves, boolean local) {
+        this.name = name;
         this.moves = moves;
         this.local = local;
+        this.id="00000";
     }
     public Player(String id,String name, LinkedBlockingQueue<Move> moves, boolean local) {
         this.id = id;
